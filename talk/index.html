@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PBVB5QC3KN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PBVB5QC3KN');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Management for Coding Agents: Kaustubh Hiware</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+<link rel="preload" as="image" href="./images/absolutely-right.png">
+<link rel="preload" as="image" href="./images/self-steer.png">
+<link rel="preload" as="image" href="./images/episodic.png">
+<link rel="preload" as="image" href="./images/lessons.png">
+<link rel="preload" as="image" href="./images/improvement.png">
+<link rel="preload" as="image" href="./images/knowledge-factory.png">
+</head>
+<body>
+
+<div class="deck-viewport">
+  <main class="deck-stage" id="deckStage">
+    <canvas class="snow-canvas" id="snowCanvas"></canvas>
+
+    <!-- ================================================================
+    SLIDE 01 — TITLE
+    ================================================================ -->
+    <section class="slide" id="s01" aria-label="Title">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="deco-circles">
+        <div class="deco-circle dc1"></div>
+        <div class="deco-circle dc2"></div>
+        <div class="deco-circle dc3"></div>
+      </div>
+      <div class="layout-title">
+        <div class="title-bracket-deco reveal d1">&lt; 🧠 &gt;</div>
+        <h1 class="hero-title reveal d2">Memory Management for Coding Agents</h1>
+        <div class="title-meta-name reveal d3">Kaustubh Hiware</div>
+      </div>
+      <div class="title-bottom-meta reveal d4">
+        <span>AI-Driven Development Meetup · Sapporo</span>
+        <span class="meta-dot"></span>
+        <span>2026.11.27</span>
+      </div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 02 — YOU'RE ABSOLUTELY RIGHT!
+    ================================================================ -->
+    <section class="slide" id="s02" aria-label="You're absolutely right">
+      <div class="layout-fullbleed">
+        <img src="./images/absolutely-right.png" alt="absolutelyright.lol chart of Claude Code saying 'absolutely right'" class="fullbleed-img">
+        <p class="fullbleed-caption">absolutelyright.lol</p>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 02</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 03 — THE PROBLEM (self-steer)
+    ================================================================ -->
+    <section class="slide" id="s03" aria-label="The problem">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-arc">
+        <p class="statement-line reveal d1">In the absence of information, AI makes decisions to the best of its capability, but this might differ from your product requirement.</p>
+        <div class="row-split reveal d2">
+          <ul class="bullet-list">
+            <li class="bullet-item">How do we get AI to make less mistakes ?</li>
+            <li class="bullet-item">How can AI get to the correct state with minimal corrections ?</li>
+          </ul>
+          <img src="./images/self-steer.png" alt="Self-driving car path planning with many candidate trajectories" class="row-img">
+        </div>
+        <p class="arc-note reveal d3"><a href="https://medium.com/udacity/self-driving-path-planning-brought-to-you-by-udacity-students-13c07bcd4f32" style="color:inherit" target="_blank" rel="noopener noreferrer">Source</a></p>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 03</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 04 — WHAT IS MEMORY
+    ================================================================ -->
+    <section class="slide" id="s04" aria-label="What is memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-arc">
+        <h2 class="arc-title reveal d1">What is memory?</h2>
+        <p class="arc-body reveal d2">Acquire, store and retrieve information relevant for your tasks.</p>
+        <p class="arc-body reveal d3">For an agent, it controls:</p>
+        <ul class="bullet-list reveal d4" style="margin-top:24px">
+          <li class="bullet-item">What the agent <strong>knows</strong></li>
+          <li class="bullet-item">How it makes <strong>decisions</strong></li>
+          <li class="bullet-item">How it implements <strong>code</strong></li>
+        </ul>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 04</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 05 — FOUR TYPES (table)
+    ================================================================ -->
+    <section class="slide" id="s05" aria-label="Four types of memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-memory">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="diagram-title reveal d2">Four types of memory</h2>
+        <div class="memory-cols">
+          <div class="memory-col reveal d3">
+            <div class="memory-name">Working</div>
+            <div class="memory-desc">The current context in the agent's window</div>
+          </div>
+          <div class="memory-col reveal d4">
+            <div class="memory-name">Episodic</div>
+            <div class="memory-desc">Past sessions, past tasks, past failures</div>
+          </div>
+          <div class="memory-col reveal d5">
+            <div class="memory-name">Semantic</div>
+            <div class="memory-desc">Facts and knowledge</div>
+          </div>
+          <div class="memory-col reveal d6">
+            <div class="memory-name">Procedural</div>
+            <div class="memory-desc">How to do things</div>
+          </div>
+        </div>
+        <p class="arc-note reveal d7">We'll discuss who reads &amp; writes each kind of memory.</p>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 05</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 06 — PLATFORM SUPPORT AGENT (loop diagram)
+    ================================================================ -->
+    <section class="slide" id="s06" aria-label="Platform Support Agent">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-diagram">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="diagram-title reveal d2">Platform Support Agent <em>(PSA)</em></h2>
+        <p class="diagram-sub reveal d3">Let's say we're building an agent that <strong>handles inquiries from engineers</strong>, <strong>investigates by itself</strong>, and <strong>assists incidents</strong>.</p>
+        <div class="hub-diagram reveal d4">
+          <svg class="hub-arrows" viewBox="512 0 660 620">
+            <defs>
+              <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 9 3.5, 0 7" fill="#4fc3dd" opacity="0.8"/>
+              </marker>
+            </defs>
+            <!-- left blocks -> PSA -->
+            <line x1="512" y1="239" x2="705" y2="275" marker-end="url(#arrowhead)"/>
+            <line x1="512" y1="327" x2="705" y2="291" marker-end="url(#arrowhead)"/>
+            <!-- PSA -> right blocks -->
+            <line x1="943" y1="251" x2="1164" y2="175" marker-end="url(#arrowhead)"/>
+            <line x1="945" y1="283" x2="1164" y2="283" marker-end="url(#arrowhead)"/>
+            <line x1="943" y1="315" x2="1164" y2="391" marker-end="url(#arrowhead)"/>
+          </svg>
+          <div class="hub-col hub-left">
+            <div class="flow-box">Engineers</div>
+            <div class="flow-box">PagerDuty triggers</div>
+          </div>
+          <div class="hub-box">
+            <span class="hub-emoji">🤖</span>
+            <span class="hub-label">PSA</span>
+          </div>
+          <div class="hub-col hub-right">
+            <div class="flow-box">Memory</div>
+            <div class="flow-box">Slack · docs</div>
+            <div class="flow-box">Datadog logs</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 06</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 07 — WORKING (W)
+    ================================================================ -->
+    <section class="slide" id="s07" aria-label="Working memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="ghost-num">W</div>
+      <div class="layout-arc">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory · 1/4</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="arc-title reveal d2">Working <em>(W)</em></h2>
+        <p class="arc-body reveal d3">Context.</p>
+        <ul class="bullet-list reveal d4" style="margin-top:28px">
+          <li class="bullet-item">AI agents provide tools for managing context — <code>/compact</code>, autocompaction, clear context, etc</li>
+          <li class="bullet-item"><strong>Only written by PSA, not read</strong></li>
+        </ul>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 07</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 08 — EPISODIC (E)
+    ================================================================ -->
+    <section class="slide" id="s08" aria-label="Episodic memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-arc has-right-panel">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory · 2/4</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="arc-title reveal d2">Episodic</h2>
+        <ul class="bullet-list reveal d3">
+          <li class="bullet-item">Conversation transcripts, session history, logs</li>
+          <li class="bullet-item">Past sessions, past tasks, past failures</li>
+          <li class="bullet-item"><strong>Only written by PSA</strong></li>
+        </ul>
+      </div>
+      <div class="split-panel arc-panel-right reveal d3">
+        <img src="./images/episodic.png" alt="Claude Code session transcript — todos and writes" class="split-img">
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 08</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 09 — SEMANTIC (S)
+    ================================================================ -->
+    <section class="slide" id="s09" aria-label="Semantic memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="ghost-num">S</div>
+      <div class="layout-arc">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory · 3/4</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="arc-title reveal d2">Semantic <em>(S)</em></h2>
+        <p class="arc-body reveal d3">Facts and knowledge.</p>
+        <ul class="bullet-list reveal d4" style="margin-top:28px">
+          <li class="bullet-item">ADR (Architecture Decision Record)</li>
+          <li class="bullet-item">Design decisions, features, API definitions</li>
+          <li class="bullet-item"><strong>Keep read only</strong>. Written by humans or documentation agents</li>
+          <li class="bullet-item">Tools to explore: Mempalace, Neo4J (graph)</li>
+        </ul>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 09</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 10 — PROCEDURAL (P)
+    ================================================================ -->
+    <section class="slide" id="s10" aria-label="Procedural memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="ghost-num">P</div>
+      <div class="layout-arc">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Types of memory · 4/4</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="arc-title reveal d2">Procedural <em>(P)</em></h2>
+        <p class="arc-body reveal d3">How to do things. Becomes skills, habits, learned procedures.</p>
+        <ul class="bullet-list reveal d4" style="margin-top:28px">
+          <li class="bullet-item">How to review a PR</li>
+          <li class="bullet-item">How to deploy a service</li>
+          <li class="bullet-item">How the team works, how to talk to them</li>
+          <li class="bullet-item"><strong>Written by humans &amp; PSA</strong></li>
+        </ul>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 10</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 11 — HOW TO IMPROVE MEMORY (curation)
+    ================================================================ -->
+    <section class="slide" id="s11" aria-label="How to improve memory">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-arc">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Improving memory</span>
+          <span class="section-line"></span>
+        </div>
+        <h2 class="arc-title reveal d2">Curation <em>!</em></h2>
+        <p class="arc-body reveal d3">A curation agent needs to learn from user interactions and make corrections.</p>
+        <p class="arc-body reveal d4" style="margin-top:36px">For the Platform Support Agent, the Curation Agent:</p>
+        <ul class="bullet-list reveal d5" style="margin-top:24px">
+          <li class="bullet-item">Reads working, episodic memory <strong>(W, E)</strong></li>
+          <li class="bullet-item">Curates patterns, incidents, new discovered systems</li>
+          <li class="bullet-item">Writes to procedural memory <strong>(P)</strong></li>
+        </ul>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 11</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 12 — TWO CRONJOBS (flow diagram)
+    ================================================================ -->
+    <section class="slide" id="s12" aria-label="Two cronjobs">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-diagram">
+        <div class="arc-label reveal d1">
+          <span class="arc-label-text">Improving memory</span>
+          <span class="section-line"></span>
+        </div>
+        <p class="statement-line reveal d2">I primarily execute my workflows with agent skills</p>
+        <p class="diagram-sub reveal d3">What I do: <strong>2 cronjobs. Curation is automated.</strong></p>
+        <div class="flow-grid reveal d4">
+          <!-- daily row -->
+          <div class="flow-schedule c1 r1">Daily</div>
+          <div class="flow-box c2 r1">Interactions<small>with agents at work</small></div>
+          <div class="flow-arrow c3 r1">→</div>
+          <div class="flow-box is-agent c4 r1">Learning cronjob<small>finds lessons</small></div>
+          <div class="flow-arrow c5 r1">→</div>
+          <div class="flow-box is-shared c6 r1">lessons.md<small>per skill</small></div>
+          <!-- hand-off arrow: lessons.md feeds the weekly job -->
+          <div class="flow-arrow-down c6 r2">↓</div>
+          <!-- weekly row -->
+          <div class="flow-schedule c1 r3">Weekly</div>
+          <div class="flow-box is-agent c6 r3">Curating cronjob<small>suggests improvements</small></div>
+          <div class="flow-arrow c7 r3">→</div>
+          <div class="flow-box c8 r3">Improvements<small>to skills & rules</small></div>
+        </div>
+        <p class="arc-note reveal d5">Human approves behavioral changes. No approval for procedural knowledge.</p>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 12</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 13 — LESSONS (screenshot)
+    ================================================================ -->
+    <section class="slide" id="s13" aria-label="Lessons">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-split">
+        <div class="split-content">
+          <div class="arc-label reveal d1">
+            <span class="arc-label-text">Improving memory · 1/2</span>
+            <span class="section-line"></span>
+          </div>
+          <h2 class="split-title reveal d2">Lessons</h2>
+          <p class="split-body reveal d3">Rules learned from user corrections. One <strong>lessons.md</strong> per skill.</p>
+        </div>
+        <div class="split-panel">
+          <img src="./images/lessons.png" alt="lessons.md — review lessons with Do / Do not rules" class="split-img-light">
+        </div>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 13</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 14 — IMPROVEMENTS (screenshot)
+    ================================================================ -->
+    <section class="slide" id="s14" aria-label="Improvements">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-split">
+        <div class="split-content">
+          <div class="arc-label reveal d1">
+            <span class="arc-label-text">Improving memory · 2/2</span>
+            <span class="section-line"></span>
+          </div>
+          <h2 class="split-title reveal d2">Improvements</h2>
+          <p class="split-body reveal d3">The weekly cronjob suggests improvements to <strong>skills, and rules</strong>.</p>
+        </div>
+        <div class="split-panel">
+          <img src="./images/improvement.png" alt="Suggested improvements to SKILL.md coding principles" class="split-img">
+        </div>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 14</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 15 — ADDITIONAL READING
+    ================================================================ -->
+    <section class="slide" id="s15" aria-label="Additional reading">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="left-accent"></div>
+      <div class="layout-split layout-split-narrow">
+        <div class="split-content">
+          <div class="arc-label reveal d1">
+            <span class="arc-label-text">Additional reading</span>
+            <span class="section-line"></span>
+          </div>
+          <h2 class="split-title reveal d2">How to build a<br>knowledge factory</h2>
+          <p class="split-body reveal d3"><a href="https://www.langchain.com/blog/knowledge-factory" style="color:var(--cyan)">langchain.com/blog/knowledge-factory</a></p>
+        </div>
+        <div class="split-panel">
+          <img src="./images/knowledge-factory.png" alt="LangChain blog — How to build a knowledge factory" class="split-img-light">
+        </div>
+      </div>
+      <div class="slide-event">AI-Driven Development Meetup · 2026.11.27</div>
+      <div class="slide-number">Kaustubh Hiware · 15</div>
+    </section>
+
+    <!-- ================================================================
+    SLIDE 16 — CLOSING (title reprise)
+    ================================================================ -->
+    <section class="slide" id="s16" aria-label="Closing">
+      <div class="top-rule"></div>
+      <div class="foot-rule"></div>
+      <div class="deco-circles">
+        <div class="deco-circle dc1"></div>
+        <div class="deco-circle dc2"></div>
+        <div class="deco-circle dc3"></div>
+      </div>
+      <div class="layout-title">
+        <div class="title-bracket-deco reveal d1">&lt; 🧠 &gt;</div>
+        <h1 class="hero-title reveal d2">Memory Management for Coding Agents</h1>
+        <div class="title-meta-name reveal d3">Kaustubh Hiware</div>
+      </div>
+      <div class="title-bottom-meta reveal d4">
+        <span>AI-Driven Development Meetup · Sapporo</span>
+        <span class="meta-dot"></span>
+        <span>2026.11.27</span>
+      </div>
+      <button class="restart-btn" onclick="deck.show(0)">↩ Restart</button>
+    </section>
+
+  </main>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">✏</button>
+
+<script src="./main.js"></script>
+</body>
+</html>

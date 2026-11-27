@@ -8,6 +8,13 @@ Improving memory
 
 ## Introduction
 
+### Kaustubh Hiware
+
+Senior Software Engineer, Mercari Japan
+𝕏 @_ofKaus
+
+<!-- For AI: speaker profile slide, layout-intro from public-speaking-for-developers/talk. Needs images/kaustubh.jpg and images/qrcode.png -->
+
 ### You're absolutely right!
 
 https://absolutelyright.lol/
@@ -41,47 +48,74 @@ Episode
 Semantic
 Procedural
 
-### Working
+We'll discuss who reads & writes each kind of memory.
+
+---
+
+### Platform support agent (PSA)
+
+We'll walk through an example. Let's say we're building an agent that handles inquiries from engineers, investigates by itself, and assists incidents.
+
+<!-- For AI, Add a good diagram to explain this, with a infinity loop kinda visual. Inputs are engineers, Pagerduty triggers, etc. Reads slack, memory, Datadog logs -->
+
+### Working (W)
 
 Context
 AI agents provide tools for managing context - /compact, autocompaction, clear context, etc
 
-### Episodic
+- Only written by PSA, not read
+
+
+### Episodic (E)
 
 conversation transcripts, session history, logs
 
 Past sessions, past tasks, past failures
 
-### Semantic
+- Only written by PSA
+
+### Semantic (S)
 
 Semantic memory = facts and knowledge — what things are
 
 ADR (Architecture Decision Record)
-Incidents, Patterns
 
-Tools: Mempalace ,Neo4J (graph)
+Design decisions, features, API definitions
 
-### Procedural
+- Keep read only (written by humans or documentation agents)
+
+Tools to explore: Mempalace, Neo4J (graph)
+
+### Procedural (P)
 
 Procedural memory = how to do things — skills, habits, learned procedures
 
 how to deploy
 how to review a PR
-Agent skills
+How the team works
+
+- Written by humans & PSA
 
 ## How to improve memory
 
 Curation !
 
-A curation agent needs to learn from user interactions and make corrections.
+A curation agent needs to learn from user interactions and make corrections. 
 
+For Platform Support Agent, the Curation Agent
+
+- Reads working, episodic memory (W, E)
+- Curates patterns, incidents, new discovered systems
+- Adds to procedural memory (P)
+
+---
 I primarily execute my workflows with agent skills
 
-What I do: 2 cronjobs
-<!-- Good to add a flow chart / diagram for this -->
+What I do: 2 cronjobs. Fully automated. Human approves behavioral changes. No approval for procedural knowledge.
 
 - A daily cronjob scans interactions, identifies "lessons", and stores "lessons.md" for each skill
 - A weekly cronjob scans through the lessons, and suggests improvements to skills, and rules.
+<!-- For AI, Add a flow chart / diagram for this -->
 
 ### Lessons
 

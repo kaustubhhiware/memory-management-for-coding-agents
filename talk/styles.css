@@ -1,0 +1,795 @@
+
+/* === CSS CUSTOM PROPERTIES ============================================
+   Winter in Sapporo: deep night navy, ice cyan, warm coral accent.
+   Blueprint grid + snowfall atmosphere. Fixed 1920×1080 stage.
+   ===================================================================== */
+:root {
+    --bg:           #0d1b24;
+    --bg-rgb:       13, 27, 36;
+    --bg-lift:      #13242f;
+    --bg-panel:     #16303d;
+    --ink:          #dcebf2;
+    --ink-rgb:      220, 235, 242;
+    --ink-mid:      var(--ink);   /* body text alias: same white as --ink */
+    --ink-faint:    rgba(var(--ink-rgb), 0.22);
+    --ink-whisper:  rgba(var(--ink-rgb), 0.10);
+
+    --cyan:         #4fc3dd;
+    --cyan-rgb:     79, 195, 221;
+    --cyan-dim:     rgba(var(--cyan-rgb), 0.40);
+    --cyan-faint:   rgba(var(--cyan-rgb), 0.09);
+
+    --paper:        #fffdf8;   /* light surfaces inside diagrams */
+    --ink-on-paper: #3a4a52;   /* caption text on paper surfaces */
+
+    --font-body:    'Libre Franklin', sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+    --ease-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* === RESET ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* === VIEWPORT BASE — fixed 1920×1080 stage ============================ */
+html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+}
+.deck-viewport {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    background: var(--bg);
+}
+.deck-stage {
+    position: absolute;
+    left: 0; top: 0;
+    width: 1920px; height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--bg);
+}
+/* blueprint atmosphere: soft glow + fine grid */
+.deck-stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse at 85% -10%, rgba(var(--cyan-rgb), 0.08), transparent 50%),
+        radial-gradient(ellipse at 0% 110%, rgba(var(--cyan-rgb), 0.05), transparent 45%);
+    z-index: 0;
+}
+.deck-stage::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(var(--cyan-rgb), 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--cyan-rgb), 0.05) 1px, transparent 1px);
+    background-size: 120px 120px;
+    z-index: 0;
+}
+.slide {
+    position: absolute; inset: 0;
+    width: 1920px; height: 1080px;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+.slide.active, .slide.visible {
+    visibility: visible; opacity: 1;
+    pointer-events: auto; z-index: 1;
+}
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; }
+    .deck-viewport { position: static; overflow: visible; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; }
+    .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; }
+    .slide:last-child { break-after: auto; }
+    .progress-bar, .edit-hotzone, .edit-toggle { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+/* === SNOWFALL (canvas, behind slides) ================================= */
+.snow-canvas {
+    position: absolute; inset: 0;
+    z-index: 0;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* === PROGRESS BAR (viewport-level) ==================================== */
+.progress-bar {
+    position: fixed; bottom: 0; left: 0;
+    height: 3px;
+    background: var(--cyan);
+    transition: width 0.4s var(--ease-expo);
+    z-index: 2000;
+    opacity: 0.55;
+}
+
+/* === REVEAL ANIMATIONS ================================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease-expo), transform 0.7s var(--ease-expo);
+}
+.slide.visible .reveal { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.06s; }
+.d2 { transition-delay: 0.18s; }
+.d3 { transition-delay: 0.32s; }
+.d4 { transition-delay: 0.46s; }
+.d5 { transition-delay: 0.60s; }
+.d6 { transition-delay: 0.74s; }
+.d7 { transition-delay: 0.88s; }
+
+/* === SHARED CHROME ==================================================== */
+.top-rule {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--cyan);
+    z-index: 2;
+}
+.foot-rule {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--ink-faint);
+    z-index: 2;
+}
+.slide-number, .slide-event {
+    position: absolute;
+    bottom: 52px;
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    z-index: 10;
+}
+.left-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(var(--cyan), rgba(var(--cyan-rgb), 0.2));
+    z-index: 2;
+}
+.slide-number { right: 76px; }
+.slide-event  { left: 76px; }
+.section-line {
+    width: 60px; height: 1px;
+    background: var(--cyan);
+    opacity: 0.45;
+    flex-shrink: 0;
+}
+.ghost-num {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 400px;
+    line-height: 1;
+    color: rgba(var(--cyan-rgb), 0.06);
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+    z-index: 0;
+}
+
+/* === DECO CIRCLES (title/closing) ===================================== */
+.deco-circles {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 600px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+.deco-circle {
+    position: absolute;
+    border-radius: 50%;
+}
+.dc1 { width: 520px; height: 520px; top: 120px; right: -120px; border: 1.5px solid var(--ink-faint); }
+.dc2 { width: 340px; height: 340px; top: 215px; right: -20px; border: 1px solid var(--cyan-dim); }
+.dc3 { width: 110px; height: 110px; top: 510px; right: 190px; background: var(--cyan-faint); }
+
+/* === ARC LABEL (section breadcrumb) =================================== */
+.arc-label {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 36px;
+}
+.arc-label-text {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 27px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cyan);
+}
+
+/* === LAYOUT: TITLE ==================================================== */
+.layout-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 180px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    /* full-slide layout container must not swallow clicks meant for buttons on top */
+    pointer-events: none;
+}
+.layout-title > * { pointer-events: auto; }
+/* title slide: nudge mark + title down without moving name/event */
+#s01 .layout-title, #s16 .layout-title { padding-top: 80px; padding-bottom: 60px; }
+/* name uses padding, not absolute positioning — breathing room above and below */
+#s01 .title-meta-name, #s16 .title-meta-name {
+    padding: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 38px;
+    color: var(--ink-mid);
+    z-index: 1;
+}
+.title-bracket-deco {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 120px;
+    color: var(--cyan);
+    opacity: 0.85;
+    margin-bottom: 16px;
+}
+.hero-title {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 116px;
+    line-height: 1.04;
+    color: var(--ink);
+    max-width: 1300px;
+    margin-bottom: 52px;
+    letter-spacing: -0.02em;
+}
+.hero-title em,
+.arc-title em,
+.split-title em,
+.statement-line em {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--cyan);
+    font-size: 1.06em;
+}
+.title-meta-name {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.title-bottom-meta {
+    position: absolute;
+    left: 180px;
+    bottom: 120px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--ink-mid);
+    letter-spacing: 0.05em;
+    z-index: 1;
+}
+
+/* === RESTART BUTTON (last slide only) ================================= */
+.restart-btn {
+    position: absolute;
+    bottom: 90px;
+    right: 76px;
+    background: transparent;
+    border: 2px solid var(--cyan);
+    border-radius: 999px;
+    padding: 18px 56px;
+    color: var(--cyan);
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.restart-btn:hover {
+    background: var(--cyan);
+    color: var(--bg);
+}
+/* === LAYOUT: ARC (statement + bullets) ================================ */
+.layout-arc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 180px;
+    height: 100%;
+    position: relative;
+}
+/* when a right image panel is present, keep text clear of it */
+.has-right-panel {
+    padding-right: 1140px;
+}
+.arc-title {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 80px;
+    line-height: 1.06;
+    color: var(--ink);
+    margin-bottom: 44px;
+    letter-spacing: -0.02em;
+}
+.arc-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.5;
+    color: var(--ink-mid);
+    max-width: 1240px;
+}
+.arc-body strong,
+.bullet-item strong,
+.split-body strong,
+.diagram-sub strong { color: var(--ink); font-weight: 600; }
+.arc-note {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.45;
+    color: var(--ink-mid);
+    margin-top: 40px;
+    padding-left: 24px;
+    border-left: 3px solid var(--cyan-dim);
+}
+.bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+.bullet-item {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.4;
+    color: var(--ink-mid);
+    padding-left: 36px;
+    position: relative;
+}
+.bullet-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0.55;
+}
+.bullet-item a { color: var(--cyan); }
+.bullet-item code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--cyan);
+    background: var(--cyan-faint);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 6px;
+    padding: 2px 12px;
+}
+
+/* === RIGHT IMAGE PANEL over an arc layout ============================= */
+.arc-panel-right {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 1080px;
+    border-left: 1px solid var(--ink-whisper);
+    z-index: 1;
+}
+.arc-panel-right .split-img { max-height: 100%; max-width: 100%; }
+
+.statement-line {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 1500px;
+    margin-bottom: 40px;
+}
+.row-split {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+}
+.row-split .bullet-list { flex: 1; }
+.row-img {
+    width: 820px;
+    max-height: 340px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* === LAYOUT: SPLIT (text + image panel) =============================== */
+.layout-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+}
+/* slide 15: 50/50 split, original spacing */
+.layout-split-narrow { grid-template-columns: 1fr 1fr; }
+.layout-split-narrow .split-content { padding: 100px 80px 100px 170px; }
+/* slide 13: wide image panel */
+#s13 .layout-split { grid-template-columns: 1fr 1160px; }
+/* slide 14 image 30% smaller */
+#s14 .layout-split { grid-template-columns: 40fr 60fr; }
+#s14 .split-img {
+    max-width: none;
+    max-height: none;
+    width: 105%;
+    height: 105%;
+    object-fit: contain;
+}
+.split-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 90px 100px 170px;
+}
+.split-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 70px;
+    background: var(--bg-lift);
+    border-left: 1px solid var(--ink-whisper);
+    min-height: 0;
+}
+.split-title {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 74px;
+    line-height: 1.06;
+    color: var(--ink);
+    margin-bottom: 40px;
+    letter-spacing: -0.02em;
+}
+.split-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 31px;
+    line-height: 1.5;
+    color: var(--ink-mid);
+    max-width: 780px;
+}
+.split-img {
+    max-width: 100%;
+    max-height: 860px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+.split-img-light {
+    /* light screenshots read better on a paper card */
+    background: var(--paper);
+    padding: 26px;
+    border-radius: 12px;
+    max-width: 100%;
+    max-height: 860px;
+    object-fit: contain;
+}
+.layout-split .split-img-light { max-height: 100%; }
+
+/* === LAYOUT: FULL-BLEED IMAGE ========================================= */
+.layout-fullbleed {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+}
+.fullbleed-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.fullbleed-caption {
+    position: absolute;
+    bottom: 110px; left: 0; right: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: italic;
+    font-size: 42px;
+    color: var(--ink-on-paper);
+}
+
+/* === LAYOUT: MEMORY TABLE (4 rows) ==================================== */
+.layout-memory {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 90px 160px 100px;
+    height: 100%;
+    position: relative;
+}
+.memory-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    align-items: center;
+    min-height: 0;
+    margin-top: 60px;
+}
+.memory-cols .memory-col { height: 300px; }
+.layout-memory .arc-note { margin-top: 44px; }
+.memory-col {
+    background: var(--bg-panel);
+    border: 1px solid var(--ink-whisper);
+    border-radius: 12px;
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 14px;
+    border-top: 3px solid var(--cyan);
+    min-height: 0;
+}
+.memory-col .memory-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--cyan);
+}
+.memory-col .memory-desc {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.45;
+    color: var(--ink);
+}
+
+/* === LAYOUT: DIAGRAM ================================================== */
+.layout-diagram {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 90px 150px 150px;
+    height: 100%;
+    position: relative;
+}
+.diagram-title {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 64px;
+    line-height: 1.08;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+.diagram-sub {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 29px;
+    line-height: 1.45;
+    color: var(--ink-mid);
+    max-width: 1500px;
+}
+
+/* --- flow diagram (cronjobs) ------------------------------------------- */
+.flow-box {
+    background: var(--bg-panel);
+    border: 1.5px solid var(--cyan-dim);
+    border-radius: 10px;
+    padding: 20px 30px;
+    font-family: var(--font-body);
+    font-size: 23px;
+    font-weight: 500;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.35;
+    min-width: 250px;
+}
+.flow-box small {
+    display: block;
+    font-weight: 300;
+    font-size: 17px;
+    color: var(--ink-mid);
+    margin-top: 5px;
+}
+.flow-box.is-agent {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--bg);
+    font-weight: 700;
+}
+.flow-box.is-agent small { color: rgba(var(--bg-rgb), 0.7); }
+.flow-box.is-agent { min-width: 200px; }
+.flow-arrow {
+    font-size: 38px;
+    color: var(--cyan);
+    padding: 0 24px;
+    font-weight: 300;
+}
+/* --- Z-flow grid (reference: Interactions → Learning → lessons.md ↓ → Curating → Improvements) --- */
+.flow-grid {
+    display: grid;
+    grid-template-columns: 150px 247px 10px 247px 10px 247px 10px 247px;
+    grid-template-rows: auto 100px auto;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+    column-gap: 0;
+    row-gap: 0;
+}
+/* square blocks, centered in their columns; label + description split 50:50 vertically */
+.flow-grid .flow-box {
+    justify-self: center;
+    text-align: center;
+    min-width: 0;
+    width: 207px;
+    height: 207px;
+    padding: 0 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+.flow-grid .flow-box small {
+    font-weight: 300;
+    font-size: 17px;
+    color: var(--ink);
+    /* description fills the lower half of the box */
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* agent blocks are solid cyan with dark text: description matches the title color */
+.flow-grid .flow-box.is-agent small { color: var(--bg); }
+/* empty upper half: pushes the main label to the box middle */
+.flow-grid .flow-box::before {
+    content: '';
+    flex: 1 1 50%;
+}
+.flow-grid .flow-arrow,
+.flow-arrow-down {
+    font-size: 30px;
+    color: var(--cyan);
+    text-align: center;
+    padding: 0;
+    line-height: 1;
+    align-self: center;
+    justify-self: center;
+}
+/* explicit column/row placement (no auto-flow: rows have gaps by design) */
+.flow-grid .c1 { grid-column: 1; }
+.flow-grid .c2 { grid-column: 2; }
+.flow-grid .c3 { grid-column: 3; }
+.flow-grid .c4 { grid-column: 4; }
+.flow-grid .c5 { grid-column: 5; }
+.flow-grid .c6 { grid-column: 6; }
+.flow-grid .c7 { grid-column: 7; }
+.flow-grid .c8 { grid-column: 8; }
+.flow-grid .r1 { grid-row: 1; }
+.flow-grid .r2 { grid-row: 2; }
+.flow-grid .r3 { grid-row: 3; }
+
+.flow-schedule {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    width: 150px;
+    text-align: right;
+    padding-right: 10px;
+    flex-shrink: 0;
+}
+.flow-box.is-shared {
+    border-color: var(--cyan);
+}
+
+/* --- hub-and-spoke diagram (PSA) ---------------------------------------
+   Geometry contract: the SVG viewBox is 1620×620. Block positions in
+   stage coordinates must match the line endpoints in viewBox coordinates.
+   ===================================================================== */
+.hub-diagram {
+    position: relative;
+    width: 1620px;
+    height: 620px;
+    margin: 24px auto 0;
+    flex: 0 0 auto;
+    min-height: 0;
+}
+.hub-arrows {
+    position: absolute;
+    left: 512px;
+    top: 0;
+    width: 660px;
+    height: 100%;
+    z-index: 0;
+}
+
+.hub-arrows line {
+    stroke: var(--cyan);
+    stroke-width: 2.5;
+    opacity: 0.7;
+}
+.hub-col {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: stretch;
+    z-index: 1;
+}
+/* blocks sit closer to the PSA hub; arrows were measured for this geometry */
+.hub-left  { left: 170px;  top: 50%; transform: translateY(-50%); }
+.hub-right { right: 170px; top: 50%; transform: translateY(-50%); }
+.hub-box {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-panel);
+    border: 1.5px solid var(--cyan-dim);
+    border-radius: 16px;
+    padding: 34px 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 1;
+}
+.hub-col .flow-box { min-width: 280px; }
+.hub-emoji { font-size: 88px; line-height: 1; }
+.hub-label {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* === EDIT MODE UI ===================================================== */
+.edit-hotzone {
+    position: fixed;
+    top: 0; left: 0;
+    width: 120px; height: 120px;
+    z-index: 3000;
+}
+.edit-toggle {
+    position: fixed;
+    top: 20px; left: 20px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--ink-faint);
+    background: var(--bg);
+    color: var(--ink-mid);
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 3001;
+}
+.edit-toggle.show { opacity: 0.9; }
+.edit-toggle.active { background: var(--cyan); color: var(--bg); opacity: 1; }
