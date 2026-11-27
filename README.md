@@ -1,4 +1,5 @@
 # memory-management-for-coding-agents
+
 LT presentation about memory management for coding agents.
 
 Summary: I'll talk about different types of memories when working with AI agents, how to document them in your codebase, and how to make knowledge discoverable so AI can autonomously develop the next feature.
