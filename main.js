@@ -96,12 +96,16 @@ window.addEventListener('popstate', e => {
     const canvas = document.getElementById('snowCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const W = 1920, H = 1080;
+    // Print layout stacks all slides vertically — cover the full stage,
+    // not just the first 1080px, so every PDF page gets snow.
+    const printMedia = window.matchMedia('print');
+    const H = printMedia.matches ? document.querySelector('.deck-stage').scrollHeight : 1080;
+    const W = 1920;
     canvas.width = W; canvas.height = H;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const FLAKES = [];
-    const COUNT = 60;
+    const COUNT = printMedia.matches ? 60 * Math.round(H / 1080) : 60;
 
     for (let i = 0; i < COUNT; i++) {
         const size = 7 + Math.random() * 11;           // font size in px
