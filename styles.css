@@ -274,7 +274,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
     text-align: center;
 }
 .intro-qr {
-    width: 140px; height: 140px;
+    width: 210px; height: 210px;
     object-fit: contain;
 }
 
@@ -617,14 +617,13 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 .layout-memory .arc-note { margin-top: 44px; }
 .memory-col {
     background: var(--bg-panel);
-    border: 1px solid var(--ink-whisper);
+    border: 3px solid var(--cyan);
     border-radius: 12px;
     padding: 44px 40px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 14px;
-    border-top: 3px solid var(--cyan);
     min-height: 0;
 }
 .memory-col .memory-name {
