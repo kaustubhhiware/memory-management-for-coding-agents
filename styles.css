@@ -27,6 +27,8 @@
     --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
 
     --ease-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+    --qr-size:      210px;
+    --qr-edge:      76px;
 }
 
 /* === RESET ============================================================ */
@@ -275,9 +277,18 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
     text-align: center;
 }
 .intro-qr {
-    width: 210px; height: 210px;
+    width: var(--qr-size); height: var(--qr-size);
     object-fit: contain;
 }
+.closing-qr-group {
+    position: absolute;
+    top: var(--qr-edge); right: var(--qr-edge);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+.closing-qr-group .intro-qr-label { margin: 16px 0 0; }
 
 /* === ARC LABEL (section breadcrumb) =================================== */
 .arc-label {
@@ -309,9 +320,9 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 }
 .layout-title > * { pointer-events: auto; }
 /* title slide: nudge mark + title down without moving name/event */
-#s01 .layout-title, #s16 .layout-title { padding-top: 80px; padding-bottom: 60px; }
+#s01 .layout-title, #s17 .layout-title { padding-top: 80px; padding-bottom: 60px; }
 /* name uses padding, not absolute positioning — breathing room above and below */
-#s01 .title-meta-name, #s16 .title-meta-name {
+#s01 .title-meta-name, #s17 .title-meta-name {
     padding: 0;
     font-family: var(--font-display);
     font-weight: 400;
